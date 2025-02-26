@@ -12,6 +12,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import axios from 'axios';
+import Config from 'react-native-config';
+import {OPENAI_API_KEY} from '@env';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -21,8 +23,9 @@ const Chatbot = () => {
 
   // OpenAI API configuration
   const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-  const API_KEY = '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'; // Replace with your actual OpenAI API key
-
+  const API_KEY = OPENAI_API_KEY; // Replace with your actual OpenAI API key
+  
+  console.log(API_KEY);
   useEffect(() => {
     // Scroll to bottom whenever messages update
     if (flatListRef.current && messages.length > 0) {
