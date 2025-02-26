@@ -49,7 +49,7 @@ const WelcomeScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('FormPage')}
           >
             <Text style={styles.buttonText}>Get Started</Text>
           </TouchableOpacity>

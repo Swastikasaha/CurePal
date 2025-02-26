@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, ScrollView, Image, StyleSheet } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { Card, Title, Paragraph } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 const FormPage = () => {
   const [name, setName] = useState('');
@@ -10,6 +11,8 @@ const FormPage = () => {
   const [weight, setWeight] = useState('');
   const [diseases, setDiseases] = useState('');
   const [documentUri, setDocumentUri] = useState(null);
+
+  const navigation = useNavigation();
 
   const handleImagePick = () => {
     const options = {
@@ -37,6 +40,7 @@ const FormPage = () => {
       documentUri,
     });
     // Submit the data to the server or process further here
+    navigation.navigate("Home");
   };
 
   return (
