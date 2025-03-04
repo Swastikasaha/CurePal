@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, ScrollView, Image, StyleSheet } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  ScrollView, 
+  Image, 
+  StyleSheet, 
+  Platform 
+} from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { Card, Title, Paragraph } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 const FormPage = () => {
@@ -17,14 +25,17 @@ const FormPage = () => {
   const handleImagePick = () => {
     const options = {
       mediaType: 'photo',
-      includeBase64: true,
+      includeBase64: false,
+      selectionLimit: 1,
+      quality: 0.5,
     };
+    
     ImagePicker.launchImageLibrary(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
-      } else {
+      } else if (response.assets && response.assets.length > 0) {
         setDocumentUri(response.assets[0].uri);
       }
     });
@@ -44,14 +55,19 @@ const FormPage = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Card style={styles.card}>
-        <Title>Create Your Account</Title>
+    <ScrollView 
+      style={styles.container}
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={styles.scrollViewContent}
+    >
+      <View style={styles.card}>
+        <Text style={styles.title}>Create Your Account</Text>
         <TextInput
           style={styles.input}
           placeholder="Name"
           value={name}
           onChangeText={setName}
+          placeholderTextColor="#888"
         />
         <TextInput
           style={styles.input}
@@ -59,6 +75,7 @@ const FormPage = () => {
           keyboardType="numeric"
           value={age}
           onChangeText={setAge}
+          placeholderTextColor="#888"
         />
         <TextInput
           style={styles.input}
@@ -66,6 +83,7 @@ const FormPage = () => {
           keyboardType="numeric"
           value={height}
           onChangeText={setHeight}
+          placeholderTextColor="#888"
         />
         <TextInput
           style={styles.input}
@@ -73,19 +91,38 @@ const FormPage = () => {
           keyboardType="numeric"
           value={weight}
           onChangeText={setWeight}
+          placeholderTextColor="#888"
         />
         <TextInput
           style={styles.input}
           placeholder="Diseases (if any)"
           value={diseases}
           onChangeText={setDiseases}
+          placeholderTextColor="#888"
         />
 
-        <Button title="Upload Medical Document" onPress={handleImagePick} />
-        {documentUri && <Image source={{ uri: documentUri }} style={styles.image} />}
+        <TouchableOpacity 
+          style={styles.uploadButton} 
+          onPress={handleImagePick}
+        >
+          <Text style={styles.uploadButtonText}>Upload Medical Document</Text>
+        </TouchableOpacity>
         
-        <Button title="Submit" onPress={handleSubmit} />
-      </Card>
+        {documentUri && (
+          <Image 
+            source={{ uri: documentUri }} 
+            style={styles.image} 
+            resizeMode="cover"
+          />
+        )}
+        
+        <TouchableOpacity 
+          style={styles.submitButton} 
+          onPress={handleSubmit}
+        >
+          <Text style={styles.submitButtonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -93,26 +130,65 @@ const FormPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFF9E6', // Match homepage background
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
     padding: 20,
   },
   card: {
-    padding: 20,
-    marginBottom: 10,
+    backgroundColor: '#FFFFFF',
     borderRadius: 10,
-    backgroundColor: '#f5f5f5',
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#0033CC', // Match homepage button color
+    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
     height: 50,
-    borderColor: '#ddd',
+    borderColor: '#0033CC', // Match homepage button color
     borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingLeft: 10,
+    borderRadius: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    fontSize: 16,
+  },
+  uploadButton: {
+    backgroundColor: '#0033CC', // Match homepage button color
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  uploadButtonText: {
+    color: '#FFFFFF',
+  },
+  submitButton: {
+    backgroundColor: '#0033CC', // Match homepage button color
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   image: {
-    width: 200,
+    width: '100%',
     height: 200,
-    marginTop: 10,
+    borderRadius: 10,
+    marginBottom: 15,
   },
 });
 

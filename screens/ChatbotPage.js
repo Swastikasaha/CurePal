@@ -14,6 +14,40 @@ import {
 import axios from 'axios';
 import Config from 'react-native-config';
 import {OPENAI_API_KEY} from '@env';
+import Svg, { Path, Circle, Rect } from 'react-native-svg';
+
+const CurePalMascot = ({ size = 50 }) => (
+  <Svg width={size} height={size} viewBox="0 0 120 120">
+    {/* Body */}
+    <Path
+      d="M30 40 A30 30 0 0 1 90 40 A30 35 0 0 1 90 80 A30 30 0 0 1 30 80 A30 35 0 0 1 30 40"
+      fill="#FF6B35"
+    />
+    {/* Face */}
+    <Circle cx="60" cy="60" r="20" fill="#B4E4FF" />
+    {/* Eyes */}
+    <Circle cx="50" cy="55" r="5" fill="#4CB9E7" />
+    <Circle cx="70" cy="55" r="5" fill="#4CB9E7" />
+    {/* Chef Hat */}
+    <Rect x="45" y="15" width="30" height="10" fill="#FFFFFF" />
+    <Path
+      d="M45 15 Q60 0 75 15"
+      fill="#FFFFFF"
+      stroke="#FFFFFF"
+      strokeWidth="2"
+    />
+    {/* Medical Cross on Hat */}
+    <Path
+      d="M57 10 L63 10 L63 7 L57 7 Z"
+      fill="#FF0000"
+    />
+    <Path
+      d="M60 13 L60 4"
+      stroke="#FF0000"
+      strokeWidth="2"
+    />
+  </Svg>
+);
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -23,9 +57,8 @@ const Chatbot = () => {
 
   // OpenAI API configuration
   const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
-  const API_KEY = OPENAI_API_KEY; // Replace with your actual OpenAI API key
+  const API_KEY = OPENAI_API_KEY;
   
-  console.log(API_KEY);
   useEffect(() => {
     // Scroll to bottom whenever messages update
     if (flatListRef.current && messages.length > 0) {
@@ -68,7 +101,7 @@ const Chatbot = () => {
       const response = await axios.post(
         OPENAI_API_URL,
         {
-          model: 'gpt-3.5-turbo', // You can change to a different model if needed
+          model: 'gpt-3.5-turbo',
           messages: conversationHistory,
           max_tokens: 1000,
           temperature: 0.7,
@@ -91,8 +124,7 @@ const Chatbot = () => {
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: 'Chatbot',
-          avatar: 'https://placeimg.com/140/140/tech',
+          name: 'CurePal',
         },
       };
 
@@ -107,8 +139,7 @@ const Chatbot = () => {
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: 'Chatbot',
-          avatar: 'https://placeimg.com/140/140/tech',
+          name: 'CurePal',
         },
       };
 
@@ -128,6 +159,7 @@ const Chatbot = () => {
           isUser ? styles.userMessage : styles.botMessage
         ]}
       >
+        {!isUser && <CurePalMascot size={30} />}
         <Text style={[styles.messageText, isUser ? styles.userMessageText : styles.botMessageText]}>
           {item.text}
         </Text>
@@ -142,7 +174,7 @@ const Chatbot = () => {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
       >
         <View style={styles.chatContainer}>
@@ -156,8 +188,8 @@ const Chatbot = () => {
           
           {isLoading && (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="small" color="#007AFF" />
-              <Text style={styles.loadingText}>Chatbot is typing...</Text>
+              <CurePalMascot size={40} />
+              <Text style={styles.loadingText}>CurePal is typing...</Text>
             </View>
           )}
           
@@ -186,7 +218,7 @@ const Chatbot = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFF9E6', // Match homepage background
   },
   chatContainer: {
     flex: 1,
@@ -200,17 +232,23 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 18,
     marginVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   userMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#0033CC', // Match homepage button color
   },
   botMessage: {
     alignSelf: 'flex-start',
     backgroundColor: '#E5E5EA',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   messageText: {
     fontSize: 16,
+    flex: 1,
+    marginLeft: 10,
   },
   userMessageText: {
     color: '#FFFFFF',
@@ -251,7 +289,7 @@ const styles = StyleSheet.create({
     minHeight: 40,
     maxHeight: 100,
     borderWidth: 1,
-    borderColor: '#DCDCDC',
+    borderColor: '#0033CC', // Match homepage button color
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 8,
@@ -263,7 +301,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#0033CC', // Match homepage button color
     borderRadius: 20,
     justifyContent: 'center',
   },
